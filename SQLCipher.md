@@ -12,7 +12,7 @@ cd sqlcipher
 ./configure
 make sqlite3.c
 
-VERSION=3031000
+VERSION=3034001
 mkdir sqlcipher-amalgamation-$VERSION
 cp sqlite3.c sqlite3.h shell.c sqlite3ext.h VERSION sqlcipher-amalgamation-$VERSION/
 ```

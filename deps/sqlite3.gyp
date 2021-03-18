@@ -99,7 +99,9 @@
             './sqlcipher-amalgamation-<@(sqlite_version).tar.gz'
           ],
           'outputs': [
-            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/sqlite3.c'
+            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/sqlite3.c',
+            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/wcicu_tokenizer.c',
+            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/wcicu_utils.c',
           ],
           'action': ['python','./extract.py','./sqlcipher-amalgamation-<@(sqlite_version).tar.gz','<(SHARED_INTERMEDIATE_DIR)']
         }
@@ -117,27 +119,37 @@
         ["OS == \"win\"", {
           'include_dirs': [
             '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/',
-            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/openssl-include/'
+            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/openssl-include/',
+            './icu/sources/common/',
+            './icu/sources/i18n/'
           ]
         },
         "OS == \"mac\"", {
           'include_dirs': [
             '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/',
-            '>(openssl_root)/include'
+            '>(openssl_root)/include',
+            './icu/sources/common/',
+            './icu/sources/i18n/'
           ]
         },
         { # linux
           'include_dirs': [
-            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/'
+            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/',
+            './icu/sources/common/',
+            './icu/sources/i18n/'
           ]
         }]
       ],
 
       'dependencies': [
-        'action_before_build'
+        'action_before_build',
+        "./icu/icu.gyp:icuuc",
+        "./icu/icu.gyp:icui18n"
       ],
       'sources': [
-        '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/sqlite3.c'
+        '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/sqlite3.c',
+        '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/wcicu_tokenizer.c',
+        '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/wcicu_utils.c',
       ],
       'direct_dependent_settings': {
         'include_dirs': [
@@ -150,6 +162,7 @@
           'SQLITE_ENABLE_FTS5',
           'SQLITE_ENABLE_JSON1',
           'SQLITE_ENABLE_RTREE',
+#           'SQLITE_ENABLE_ICU',
           'SQLITE_HAS_CODEC',
           'SQLITE_TEMP_STORE=2',
           'SQLITE_SECURE_DELETE',
@@ -165,6 +178,7 @@
         'HAVE_USLEEP=1',
         'SQLITE_ENABLE_FTS3',
         'SQLITE_ENABLE_FTS5',
+#         'SQLITE_ENABLE_ICU',
         'SQLITE_ENABLE_JSON1',
         'SQLITE_ENABLE_RTREE',
         'SQLITE_HAS_CODEC',
